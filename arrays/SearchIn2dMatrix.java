@@ -44,8 +44,40 @@ public class SearchIn2dMatrix {
         return false;
     }
 	
-	// Time complexity -> O(m * log(n)), Space complexity -> O(1)
+	// Time complexity -> O(m * n), Space complexity -> O(m * n)
 	public boolean searchMatrix2(int[][] matrix, int target) {
+        int m = matrix.length;
+        if (m == 0) return false;
+        int n = matrix[0].length;
+
+        int[] flatArr = new int[m * n];
+        int k = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                flatArr[k++] = matrix[i][j];
+            }
+        }
+
+        return binarySearch(flatArr, target);
+    }
+	
+	// Time complexity -> O(m * log(n)), Space complexity -> O(1)
+	public boolean searchMatrix3(int[][] matrix, int target) {
+       int m = matrix.length;
+        if (m == 0) return false;
+        int n = matrix[0].length;
+
+        for (int i = 0; i < m; i++) {
+            if (binarySearch(matrix[i], target) == true) {
+                return true;
+            }
+        }
+
+        return false; 
+    }
+	
+	// Time complexity -> O(m * log(n)), Space complexity -> O(1)
+	public boolean searchMatrix4(int[][] matrix, int target) {
         int m = matrix.length;
         if (m == 0) return false;
         int n = matrix[0].length;
@@ -78,5 +110,52 @@ public class SearchIn2dMatrix {
         
         return false;
     }
+    
+    // Time complexity -> O(log(m) * log(n)), Space complexity -> O(1)
+    public boolean searchMatrix5(int[][] matrix, int target) {
+        int m = matrix.length;
+         if (m == 0) return false;
+         int n = matrix[0].length;
+
+         int rowLow = 0, rowHigh = m - 1;
+         while (rowLow <= rowHigh) {
+             int mid = rowLow + (rowHigh - rowLow) / 2;
+             if (matrix[mid][0] <= target && matrix[mid][n - 1] >= target) {
+                 return binarySearch(matrix[mid], target);
+             } else if (matrix[mid][n - 1] <= target) {
+                 rowLow = mid + 1;
+             } else {
+                 rowHigh = mid - 1;
+             }
+         }
+
+         return false; 
+     }
+    
+    // Time complexity -> O(log(m * n)), Space complexity -> O(1)
+    public boolean searchMatrix6(int[][] matrix, int target) {
+        int m = matrix.length;
+        if (m == 0) return false;
+        int n = matrix[0].length;
+
+        int i = 0, j = m * n - 1;
+        while (i <= j) {
+            int mid = i + (j - i) / 2;
+            int rowIdx = mid / n;
+            int colIdx = mid % n;
+
+            if (matrix[rowIdx][colIdx] == target) {
+                return true;
+            } else if (matrix[rowIdx][colIdx] > target) {
+                j = mid - 1;
+            } else {
+                i = mid + 1;
+            }
+        }
+
+        return false;
+    }
+    
+    
 
 }
